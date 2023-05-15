@@ -1,13 +1,13 @@
 variable "environment" {
-  default = "development"
+  default = "local"
 }
 
 variable "location_name" {
   default = "West Europe"
 }
 
-variable "default_nsg_name" {
-  default = "default_nsg"
+variable "aks_nsg_name" {
+  default = "aks_nsg"
 }
 
 variable "vnet_name" {
@@ -15,31 +15,11 @@ variable "vnet_name" {
 }
 
 variable "address_space" {
-  default = ["10.0.0.0/16"]
+  default = ["10.1.0.0/16"]
 }
 
-variable "subnet_1_name" {
-  default = "subnet_1"
-}
-
-variable "subnet_1_prefix" {
-  default = "10.0.1.0/24"
-}
-
-variable "client_id" {
-  
-}
-
-variable "client_secret" {
-  
-}
-
-variable "tenant_id" {
-  
-}
-
-variable "subscription_id" {
-  
+variable "subnet_aks_prefixes" {
+  default = ["10.1.0.0/22"]
 }
 
 variable "security_rules" {
@@ -67,5 +47,23 @@ variable "security_rules" {
         destination_address_prefix = "*"
     }
 ]
+}
+
+
+
+variable "client_id" {
+  
+}
+
+variable "client_secret" {
+  
+}
+
+variable "tenant_id" {
+  
+}
+
+variable "subscription_id" {
+  
 }
 

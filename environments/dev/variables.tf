@@ -1,5 +1,5 @@
 variable "environment" {
-  default = "local"
+  default = "develop"
 }
 
 variable "location_name" {

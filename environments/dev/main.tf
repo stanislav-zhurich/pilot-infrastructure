@@ -11,6 +11,7 @@ module "network" {
 }
 
 module "kubernetes_cluster" {
+
   depends_on = [ module.network ]
   source = "../../modules/k8s"
   cluster_name = "${var.environment}_cluster"
@@ -25,4 +26,10 @@ module "kubernetes_cluster" {
   aks_user_admin_group_owners = ["881efb1c-9e27-4b58-823a-230f51d9a8f4"]
   aks_user_admin_group_name = "${var.environment}_aks_user_admin_group"
   aks_subnet_id = module.network.aks_subnet.id
+  org_service_url = var.org_service_url
+  personal_access_token = var.personal_access_token
+  subscription_id = var.subscription_id
+  tenant_id = var.tenant_id
+  ado_project_id = var.ado_project_id
+  service_endpoint_name = "${var.environment}_aks_service_endpoint"
 }

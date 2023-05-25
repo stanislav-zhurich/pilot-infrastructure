@@ -52,18 +52,36 @@ variable "security_rules" {
 
 
 variable "client_id" {
-  
+   type = string
 }
 
 variable "client_secret" {
-  
+   type = string
 }
 
 variable "tenant_id" {
-  
+   type = string
 }
 
 variable "subscription_id" {
-  
+   type = string
+}
+
+variable "ado_project_id" {
+  type = string
+  default = "8412a1d1-7144-4c3e-b6cd-02bbfb9f60ee"
+}
+
+variable "service_endpoint_name" {
+  type = string
+}
+
+variable "org_service_url" {
+  type = string
+  default = "https://dev.azure.com/stancorp/"
+}
+
+variable "personal_access_token" {
+  type = string
 }
 

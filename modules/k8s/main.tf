@@ -1,3 +1,20 @@
+resource "azuredevops_serviceendpoint_kubernetes" "aks_ado_serviceendpoint" {
+  project_id            = var.ado_project_id
+  service_endpoint_name = var.service_endpoint_name
+  apiserver_url = "https://${azurerm_kubernetes_cluster.kubernetes_cluster.fqdn}"
+  authorization_type    = "AzureSubscription"
+
+  azure_subscription {
+    subscription_id   = var.subscription_id
+    subscription_name = "Pay-As-You-Go"
+    tenant_id         = var.tenant_id
+    resourcegroup_id  = var.resource_group_name
+    namespace         = "default"
+    cluster_name      = var.cluster_name
+  }
+}
+
+
 resource "azurerm_user_assigned_identity" "aks_user_identity" {
   location            = var.location_name
   name                = var.aks_user_identity_name
@@ -18,7 +35,8 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   location            = var.location_name
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix_name
-  private_cluster_enabled = true
+  private_cluster_enabled = false
+  local_account_disabled = true
 
   azure_active_directory_role_based_access_control {
     managed = true
@@ -42,9 +60,5 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   identity {
     type = "UserAssigned"
     identity_ids = [ azurerm_user_assigned_identity.aks_user_identity.id ]
-  }
-
-  tags = {
-    Environment = "Production"
   }
 }

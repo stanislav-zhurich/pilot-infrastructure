@@ -46,3 +46,27 @@ variable "vm_size" {
   type = string
   default = "Standard DS2_v2"
 }
+
+variable "tenant_id" {
+  type = string 
+}
+
+variable "subscription_id" {
+  type = string
+}
+
+variable "org_service_url" {
+  type = string
+}
+
+variable "personal_access_token" {
+  type = string
+}
+
+variable "service_endpoint_name" {
+  type = string
+}
+
+variable "ado_project_id" {
+  type = string
+}

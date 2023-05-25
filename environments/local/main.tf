@@ -10,6 +10,13 @@ module "network" {
   subnet_aks_name = "${var.environment}_aks_subnet"
 }
 
+module "cosmosdb" {
+  source = "../../modules/cosmosdb"
+  cosmosdb_account_name = "${var.environment}pilotcosmosdb"
+  location_name = module.network.resource_group.location
+  resource_group_name = module.network.resource_group.name
+}
+
 module "kubernetes_cluster" {
   depends_on = [ module.network ]
   source = "../../modules/k8s"

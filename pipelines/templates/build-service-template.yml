@@ -1,9 +1,8 @@
-variables:
-  - name: DockerAccountName
-    value: stanislavzhurich
 parameters:
   - name: ServiceName
     default: ""
+  - name: DockerAccountName
+    default: stanislavzhurich
 stages: 
   - stage: Build
     displayName: Build

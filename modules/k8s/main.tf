@@ -36,7 +36,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   resource_group_name = var.resource_group_name
   dns_prefix          = var.dns_prefix_name
   private_cluster_enabled = false
-  local_account_disabled = true
+  local_account_disabled = false
 
   azure_active_directory_role_based_access_control {
     managed = true

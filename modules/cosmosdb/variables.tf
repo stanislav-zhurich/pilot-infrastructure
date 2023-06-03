@@ -9,3 +9,7 @@ variable "location_name" {
 variable "cosmosdb_account_name" {
   type = string
 }
+
+variable "cosmosdb_database_name" {
+  type = string
+}

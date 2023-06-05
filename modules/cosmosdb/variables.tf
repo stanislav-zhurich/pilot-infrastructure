@@ -10,6 +10,11 @@ variable "cosmosdb_account_name" {
   type = string
 }
 
-variable "cosmosdb_database_name" {
+variable "tags" {
+  type = map
+  default = {owner = "stan", type="cosmosdb_account"}
+}
+
+variable "environment" {
   type = string
 }

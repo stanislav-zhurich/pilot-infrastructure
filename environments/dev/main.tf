@@ -12,8 +12,10 @@ module "network" {
 
 module "cosmosdb" {
   source = "../../modules/cosmosdb"
-  cosmosdb_account_name = "${var.environment}_pilot_account"
-  cosmosdb_database_name = "${var.environment}_pilot_database"
+  cosmosdb_account_name = "${var.environment}-pilot-account"
+  location_name = module.network.resource_group.location
+  resource_group_name = module.network.resource_group.name
+  environment = var.environment
 }
 
 module "kubernetes_cluster" {

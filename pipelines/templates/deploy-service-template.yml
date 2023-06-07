@@ -59,5 +59,4 @@ stages:
             chartVersion: '$(IMAGE_TAG)'
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-develop.yaml'
-            arguments: '--atomic'
      

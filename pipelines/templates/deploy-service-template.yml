@@ -9,7 +9,7 @@ stages:
   - stage: Service Infrastructure Setup
     displayName: Service Infrastructure Setup
     pool: Azure Pipelines
-    condition: eq(${{ parameters.RunTerraform }, 'True')
+    condition: eq(${{ parameters.RunTerraform }}, 'True')
     jobs:
       - job:
         steps:

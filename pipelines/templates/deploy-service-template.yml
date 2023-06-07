@@ -21,7 +21,7 @@ stages:
             command: 'init'
             commandOptions: '-reconfigure'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
-            backendServiceArm: '${{ parameters.subscription }}'
+            backendServiceArm: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
@@ -33,7 +33,7 @@ stages:
             command: 'plan'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
-            environmentServiceNameAzureRM: '${{ parameters.subscription }}'
+            environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Apply 
           inputs:
@@ -41,7 +41,7 @@ stages:
             command: 'apply'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
-            environmentServiceNameAzureRM: '${{ parameters.subscription }}'
+            environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
   - stage: Deploy
     displayName: Deploy
     pool: Azure Pipelines

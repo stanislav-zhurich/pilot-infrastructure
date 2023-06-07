@@ -6,7 +6,7 @@ parameters:
   - name: subscription
     default: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
 stages: 
-  - stage: Service Infrastructure Setup
+  - stage: Service_Infrastructure_Setup
     displayName: Service Infrastructure Setup
     pool: Azure Pipelines
     condition: eq(${{ parameters.RunTerraform }}, 'True')

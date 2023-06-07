@@ -25,7 +25,7 @@ stages:
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: 'ado-develop-key'
+            backendAzureRmKey: 'userservice.terraform.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:

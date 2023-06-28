@@ -27,7 +27,7 @@ stages:
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: 'userservice.terraform.tfstate'
+            backendAzureRmKey: 'userservice.predeployment.terraform.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:
@@ -82,7 +82,7 @@ stages:
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: 'userservice.terraform.tfstate'
+            backendAzureRmKey: 'userservice.postdeployment.terraform.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:

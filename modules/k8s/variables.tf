@@ -70,3 +70,8 @@ variable "service_endpoint_name" {
 variable "ado_project_id" {
   type = string
 }
+
+
+variable "public_ip" {
+  type = string
+}

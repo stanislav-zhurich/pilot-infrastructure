@@ -1,13 +1,32 @@
+data "azurerm_dns_zone" "public_dns_zone" {
+  name                = "pilotcloudapp.com"
+  resource_group_name = var.infra_resource_group_name
+}
+
 resource "azurerm_resource_group" "resource_group" {
   name     = "${var.environment}_resource_group"
   location = var.location_name
   tags = merge(var.tags, {environment = var.environment})
 }
 
-resource "azurerm_dns_zone" "public_dns_zone" {
-  name                = "${var.environment}.pilotstan.com"
+resource "azurerm_dns_a_record" "dns_record" {
+  name                = "${var.environment}"
+  resource_group_name = var.infra_resource_group_name
+  zone_name           = data.azurerm_dns_zone.public_dns_zone.name
+  ttl                 = 60
+  records             = [azurerm_public_ip.public_ip.ip_address]
+
+}
+
+resource "azurerm_public_ip" "public_ip" {
+  name                = var.public_ip_name
   resource_group_name = azurerm_resource_group.resource_group.name
-  tags = merge(var.tags, {environment = var.environment})
+  location            = azurerm_resource_group.resource_group.location
+  allocation_method   = "Static"
+  sku = "Standard"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "azurerm_network_security_group" "aks_nsg" {

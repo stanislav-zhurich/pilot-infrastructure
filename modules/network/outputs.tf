@@ -4,7 +4,7 @@ output "resource_group" {
 }
 
 output "public_dns_zone" {
-  value = azurerm_dns_zone.public_dns_zone
+  value = data.azurerm_dns_zone.public_dns_zone
   description = "public dns zone"
 }
 
@@ -25,4 +25,12 @@ output "aks_subnet" {
 
 output "environment" {
   value = var.environment
+}
+
+output "public_ip" {
+  value = azurerm_public_ip.public_ip.ip_address
+}
+
+output "dns_record" {
+  value = azurerm_dns_a_record.dns_record.fqdn
 }

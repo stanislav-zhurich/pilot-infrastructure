@@ -5,6 +5,8 @@ parameters:
     default: False
   - name: subscription
     default: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
+  - name: RunPostDeploymentTerraform
+    default: False 
 stages: 
   - stage: Service_Infrastructure_Setup
     displayName: Service Infrastructure Setup
@@ -20,7 +22,7 @@ stages:
             provider: 'azurerm'
             command: 'init'
             commandOptions: '-reconfigure'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             backendServiceArm: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
@@ -32,7 +34,7 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Apply 
@@ -40,7 +42,7 @@ stages:
             provider: 'azurerm'
             command: 'apply'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
   - stage: Deploy
     displayName: Deploy
@@ -60,4 +62,41 @@ stages:
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-develop.yaml'
             arguments: '--atomic'
+
+  - stage: Service_Infrastructure_Postdeployment_Setup
+    displayName: Service Infrastructure Postdeployment Setup
+    pool: Azure Pipelines
+    condition: eq(${{ parameters.RunPostDeploymentTerraform }}, 'True')
+    jobs:
+      - job:
+        steps:
+        - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+        - task: TerraformTaskV4@4
+          displayName: Run Terraform Init 
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            commandOptions: '-reconfigure'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            backendServiceArm: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
+            backendAzureRmResourceGroupName: 'infra_rg'
+            backendAzureRmStorageAccountName: 'infrastanstorageaccount'
+            backendAzureRmContainerName: 'terraform'
+            backendAzureRmKey: 'userservice.terraform.tfstate'
+        - task: TerraformTaskV4@4
+          displayName: Run Terraform Plan 
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
+        - task: TerraformTaskV4@4
+          displayName: Run Terraform Apply 
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
      

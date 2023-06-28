@@ -1,3 +1,5 @@
+data "azuread_client_config" "current" {}
+
 module "network" {
   source = "../../modules/network"
   environment = var.environment
@@ -8,6 +10,7 @@ module "network" {
   aks_nsg_name = "${var.environment}_${var.aks_nsg_name}"
   subnet_aks_prefixes = var.subnet_aks_prefixes
   subnet_aks_name = "${var.environment}_aks_subnet"
+  public_ip_name = "${var.environment}_public_ip"
 }
 
 module "cosmosdb" {
@@ -18,9 +21,17 @@ module "cosmosdb" {
   environment = var.environment
 }
 
-module "kubernetes_cluster" {
+module "key_vault" {
+  source = "../../modules/keyvault"
+  resource_group_name = module.network.resource_group.name
+  location_name = module.network.resource_group.location
+  tenant_id = data.azuread_client_config.current.tenant_id
+  key_vault_name = "${var.environment}-pilot-kv"
+  tags = {environment = var.environment}
+  current_user_id = data.azuread_client_config.current.object_id
+}
 
-  depends_on = [ module.network ]
+module "kubernetes_cluster" {
   source = "../../modules/k8s"
   cluster_name = "${var.environment}_cluster"
   dns_prefix_name = "${var.environment}cluster"
@@ -40,4 +51,12 @@ module "kubernetes_cluster" {
   tenant_id = var.tenant_id
   ado_project_id = var.ado_project_id
   service_endpoint_name = "${var.environment}_aks_service_endpoint"
+  public_ip =  module.network.public_ip
+}
+
+module "servicebus" {
+  source = "../../modules/servicebus"
+  location_name = module.network.resource_group.location
+  resource_group_name = module.network.resource_group.name
+  service_bus_name = "${var.environment}pilotappservicebus"
 }

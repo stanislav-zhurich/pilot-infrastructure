@@ -84,6 +84,7 @@ stages:
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-develop.yaml'
             arguments: '--atomic'
+            overrideValues: 'service_sp_id=$(service_sp_id),service_sp_pswd=$(service_sp_pswd),service_sp_tenant_id=$(service_sp_tenant_id)'
 
   - stage: Service_Infrastructure_Postdeployment_Setup
     displayName: Service Infrastructure Postdeployment Setup

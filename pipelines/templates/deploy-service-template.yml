@@ -58,20 +58,27 @@ stages:
     variables:
       service_sp_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalIdVar'] ]
       service_sp_pswd: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalSecretVar'] ]
-      service_sp_directory_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalDirectoryVar'] ]
+      service_sp_tenant_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalDirectoryVar'] ]
     displayName: Deploy
     pool: Azure Pipelines
     jobs:
       - job: 
         steps:
+        - task: AzureKeyVault@2
+          displayName: Get Client Credentials
+              inputs:
+                azureSubscription: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
+                KeyVaultName: 'develop-pilot-kv'
+                SecretsFilter: '*'
+                RunAsPreJob: true
         - task: CmdLine@2
-          displayName: Test
+          displayName: Check Key Vault
           inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             script: |
-              echo $(service_sp_directory_id)
-              echo $(service_sp_id)
-              echo $(service_sp_pswd)
+              echo $(user-service-sp-id)
+              echo $(user-service-sp-password)
+              echo $(user-service-sp-tenant)
         - task: HelmDeploy@0
           inputs:
             connectionType: 'Kubernetes Service Connection'

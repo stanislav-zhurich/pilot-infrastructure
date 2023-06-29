@@ -1,6 +1,5 @@
-data "azurerm_user_assigned_identity" "ado_application" {
-  name                = "ado_terraform_mi"
-  resource_group_name =  var.infra_resource_group_name
+data "azuread_service_principal" "ado_service_principal" {
+  display_name = "stancorp-pilot-user-service-8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f"
 }
 
 resource "azurerm_key_vault" "key_vault" {
@@ -20,7 +19,7 @@ resource "azurerm_key_vault" "key_vault" {
 resource "azurerm_role_assignment" "ado_key_vault_contributor_assignement" {
   scope                = azurerm_key_vault.key_vault.id
   role_definition_name = "Key Vault Administrator"
-  principal_id         = data.azurerm_user_assigned_identity.ado_application.principal_id
+  principal_id         = data.azuread_service_principal.ado_service_principal.object_id
 }
 
 resource "azurerm_role_assignment" "terraform_key_vault_contributor_assignement" {

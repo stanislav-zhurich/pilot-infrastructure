@@ -47,6 +47,7 @@ stages:
         - task: CmdLine@2
           displayName: Test
           inputs:
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             script: |
                   echo $(terraform output service_sp_id)
   - stage: Deploy

@@ -66,11 +66,11 @@ stages:
         steps:
         - task: AzureKeyVault@2
           displayName: Get Client Credentials
-              inputs:
-                azureSubscription: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
-                KeyVaultName: 'develop-pilot-kv'
-                SecretsFilter: '*'
-                RunAsPreJob: true
+          inputs:
+            azureSubscription: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
+            KeyVaultName: 'develop-pilot-kv'
+            SecretsFilter: '*'
+            RunAsPreJob: true
         - task: CmdLine@2
           displayName: Check Key Vault
           inputs:

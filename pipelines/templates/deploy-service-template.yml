@@ -106,9 +106,5 @@ stages:
     jobs:
       - job:
         steps:
-        - task: CmdLine@2
-          inputs:
-          script: |
-            echo $(terraform output -raw user-service-sp-id)
-            
-            echo Hello world
+        - bash: |
+           echo "$(terraform output -raw user-service-sp-id)"

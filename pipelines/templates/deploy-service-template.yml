@@ -13,7 +13,7 @@ stages:
     pool: Azure Pipelines
     condition: eq(${{ parameters.RunTerraform }}, 'True')
     jobs:
-      - job:
+      - job: Terraform
         steps:
         - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
         - task: TerraformTaskV4@4
@@ -49,13 +49,22 @@ stages:
           inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             script: |
-                  echo $(terraform output service_sp_id)
+                  echo "##vso[task.setvariable variable=servicePrincipalId;isOutput=true]$(terraform output service_sp_id)"
+        
   - stage: Deploy
+    variables:
+      servicePrincipalId1: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['setCurProjVersion.servicePrincipalId'] ]
     displayName: Deploy
     pool: Azure Pipelines
     jobs:
       - job: 
         steps:
+        - task: CmdLine@2
+          displayName: Test
+          inputs:
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            script: |
+              echo $(servicePrincipalId1)
         - task: HelmDeploy@0
           inputs:
             connectionType: 'Kubernetes Service Connection'

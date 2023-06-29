@@ -48,7 +48,7 @@ stages:
           displayName: Test
           inputs:
             script: |
-                  echo $(terraform output -raw user-service-sp-id)
+                  echo $(terraform output -raw service_sp_id)
   - stage: Deploy
     displayName: Deploy
     pool: Azure Pipelines

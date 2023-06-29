@@ -1,5 +1,5 @@
 data "azuread_application" "ado_application" {
-  display_name = "dev_terraform_appreg"
+  display_name = "ado_terraform_mi"
 }
 
 resource "azurerm_key_vault" "key_vault" {

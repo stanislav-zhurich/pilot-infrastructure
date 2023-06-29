@@ -41,5 +41,4 @@ variable "public_ip_name" {
 
 variable "infra_resource_group_name" {
   type = string
-  default = "infra_rg"
 }

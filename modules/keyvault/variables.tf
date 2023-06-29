@@ -21,3 +21,7 @@ variable "tags" {
 variable "current_user_id" {
   type = string
 }
+
+variable "infra_resource_group_name" {
+  type = string
+}

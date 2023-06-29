@@ -11,6 +11,7 @@ module "network" {
   subnet_aks_prefixes = var.subnet_aks_prefixes
   subnet_aks_name = "${var.environment}_aks_subnet"
   public_ip_name = "${var.environment}_public_ip"
+  infra_resource_group_name = var.infra_resource_group_name
 }
 
 module "cosmosdb" {
@@ -29,6 +30,7 @@ module "key_vault" {
   key_vault_name = "${var.environment}-pilot-kv"
   tags = {environment = var.environment}
   current_user_id = data.azuread_client_config.current.object_id
+  infra_resource_group_name = var.infra_resource_group_name
 }
 
 module "kubernetes_cluster" {

@@ -1,5 +1,6 @@
-data "azuread_application" "ado_application" {
-  display_name = "ado_terraform_mi"
+data "azurerm_user_assigned_identity" "ado_application" {
+  name                = "ado_terraform_mi"
+  resource_group_name =  var.infra_resource_group_name
 }
 
 resource "azurerm_key_vault" "key_vault" {
@@ -19,7 +20,7 @@ resource "azurerm_key_vault" "key_vault" {
 resource "azurerm_role_assignment" "ado_key_vault_contributor_assignement" {
   scope                = azurerm_key_vault.key_vault.id
   role_definition_name = "Key Vault Administrator"
-  principal_id         = data.azuread_application.ado_application.application_id
+  principal_id         = data.azurerm_user_assigned_identity.ado_application.principal_id
 }
 
 resource "azurerm_role_assignment" "terraform_key_vault_contributor_assignement" {

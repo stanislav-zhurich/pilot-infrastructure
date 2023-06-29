@@ -107,4 +107,4 @@ stages:
       - job:
         steps:
         - bash: |
-           echo "$(terraform output -raw user-service-sp-id)"
+           echo $(terraform output -raw user-service-sp-id)

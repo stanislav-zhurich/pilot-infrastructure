@@ -100,3 +100,15 @@ stages:
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
             environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
      
+  - stage: Test
+    displayName: Test
+    pool: Azure Pipelines
+    jobs:
+      - job:
+        steps:
+        - task: CmdLine@2
+          inputs:
+          script: |
+            echo $(terraform output -raw user-service-sp-id)
+            
+            echo Hello world

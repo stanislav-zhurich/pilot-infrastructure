@@ -45,6 +45,7 @@ stages:
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
             environmentServiceNameAzureRM: 'Pay-As-You-Go (8b41bb3a-73a0-4041-90c2-d82d4d3cbc5f)'
         - task: CmdLine@2
+          name: SetVariable
           displayName: Test
           inputs:
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
@@ -53,7 +54,7 @@ stages:
         
   - stage: Deploy
     variables:
-      servicePrincipalId1: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['setCurProjVersion.servicePrincipalId'] ]
+      servicePrincipalId1: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetVariable.servicePrincipalId'] ]
     displayName: Deploy
     pool: Azure Pipelines
     jobs:

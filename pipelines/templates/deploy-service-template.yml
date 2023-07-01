@@ -1,4 +1,12 @@
 parameters:
+  - name: environment
+    displayName: environment
+    type: string
+    default: develop
+    values:
+    - develop
+    - qa1
+    - production
   - name: ServiceName
     default: ""
   - name: RunTerraform
@@ -22,19 +30,19 @@ stages:
             provider: 'azurerm'
             command: 'init'
             commandOptions: '-reconfigure'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             backendServiceArm: '${{ parameters.subscription }}'
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: '${{ parameters.ServiceName }}.predeployment.terraform.tfstate'
+            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.predeployment.terraform.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:
             provider: 'azurerm'
             command: 'plan'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             environmentServiceNameAzureRM: '${{ parameters.subscription }}'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Apply 
@@ -42,13 +50,13 @@ stages:
             provider: 'azurerm'
             command: 'apply'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             environmentServiceNameAzureRM: '${{ parameters.subscription }}'
         - task: CmdLine@2
           name: SetServicePrincipalVariables
           displayName: Test
           inputs:
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             script: |
                   echo "##vso[task.setvariable variable=servicePrincipalDirectoryVar;isOutput=true]$(terraform output service_sp_tenant_id)"
                   echo "##vso[task.setvariable variable=servicePrincipalIdVar;isOutput=true]$(terraform output service_sp_id)"
@@ -74,7 +82,7 @@ stages:
         - task: CmdLine@2
           displayName: Check Key Vault
           inputs:
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/predeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             script: |
               echo $(service_sp_id)
               echo $(service_sp_pswd)
@@ -82,14 +90,14 @@ stages:
         - task: HelmDeploy@0
           inputs:
             connectionType: 'Kubernetes Service Connection'
-            kubernetesServiceConnection: 'develop_aks_service_endpoint'
+            kubernetesServiceConnection: '${{ parameters.environment }}_aks_service_endpoint'
             namespace: 'default'
             command: 'upgrade'
             chartType: 'FilePath'
             chartPath: './${{ parameters.ServiceName }}'
             chartVersion: '$(IMAGE_TAG)'
             releaseName: '${{ parameters.ServiceName }}'
-            valueFile: './${{ parameters.ServiceName }}/values-develop.yaml'
+            valueFile: './${{ parameters.ServiceName }}/values-${{ parameters.environment }}.yaml'
             arguments: '--atomic'
             overrideValues: 'envValues[1].name=service_sp_id,envValues[1].value=$(service_sp_id),envValues[2].name=service_sp_pswd,envValues[2].value=$(service_sp_pswd),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(service_sp_tenant_id)'
 
@@ -107,19 +115,19 @@ stages:
             provider: 'azurerm'
             command: 'init'
             commandOptions: '-reconfigure'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/postdeployment' 
             backendServiceArm: '${{ parameters.subscription }}'
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: '${{ parameters.ServiceName }}.postdeployment.terraform.tfstate'
+            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.postdeployment.terraform.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:
             provider: 'azurerm'
             command: 'plan'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/postdeployment' 
             environmentServiceNameAzureRM: '${{ parameters.subscription }}'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Apply 
@@ -127,5 +135,5 @@ stages:
             provider: 'azurerm'
             command: 'apply'
             commandOptions: '-input=false -var "client_id=$(client_id)" -var "client_secret=$(client_secret)" -var "tenant_id=$(tenant_id)" -var "subscription_id=$(subscription_id)"'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/development/postdeployment' 
+            workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/postdeployment' 
             environmentServiceNameAzureRM: '${{ parameters.subscription }}'

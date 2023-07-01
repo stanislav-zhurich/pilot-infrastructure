@@ -35,7 +35,7 @@ stages:
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.predeployment.terraform.tfstate'
+            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.1.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:
@@ -120,7 +120,7 @@ stages:
             backendAzureRmResourceGroupName: 'infra_rg'
             backendAzureRmStorageAccountName: 'infrastanstorageaccount'
             backendAzureRmContainerName: 'terraform'
-            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.postdeployment.terraform.tfstate'
+            backendAzureRmKey: '${{ parameters.ServiceName }}.${{ parameters.environment }}.2.tfstate'
         - task: TerraformTaskV4@4
           displayName: Run Terraform Plan 
           inputs:

@@ -90,7 +90,7 @@ stages:
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-develop.yaml'
             arguments: '--atomic'
-            overrideValues: 'envValues[0].name=service_sp_id,envValues[0].value=$(user-service-sp-id),envValues[1].name=service_sp_pswd,envValues[1].value=$(user-service-sp-password),envValues[2].name=service_sp_tenant_id,envValues[2].value=$(user-service-sp-tenant)'
+            overrideValues: 'envValues[1].name=service_sp_id,envValues[1].value=$(user-service-sp-id),envValues[2].name=service_sp_pswd,envValues[2].value=$(user-service-sp-password),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(user-service-sp-tenant)'
 
   - stage: Service_Infrastructure_Postdeployment_Setup
     displayName: Service Infrastructure Postdeployment Setup

@@ -27,7 +27,7 @@ steps:
     backendAzureRmResourceGroupName: 'infra_rg'
     backendAzureRmStorageAccountName: 'infrastanstorageaccount'
     backendAzureRmContainerName: 'terraform'
-    backendAzureRmKey: 'infra-$(Build. SourceBranchName)-key'
+    backendAzureRmKey: 'infra-$(Build.SourceBranchName)-key'
 - task: TerraformTaskV4@4
   displayName: Run Terraform Plan 
   inputs:

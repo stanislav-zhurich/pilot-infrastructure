@@ -28,7 +28,7 @@ steps:
     backendAzureRmResourceGroupName: 'infra_rg'
     backendAzureRmStorageAccountName: 'infrastanstorageaccount'
     backendAzureRmContainerName: 'terraform'
-    backendAzureRmKey: 'ado-${{ parameters.environment }}-key'
+    backendAzureRmKey: 'infra-${{ parameters.environment }}-key'
 - task: TerraformTaskV4@4
   displayName: Run Terraform Destroy 
   inputs:

@@ -46,6 +46,9 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   dns_prefix          = var.dns_prefix_name
   private_cluster_enabled = false
   local_account_disabled = false
+  oidc_issuer_enabled = true
+  workload_identity_enabled = true
+
 
 
   azure_active_directory_role_based_access_control {
@@ -70,6 +73,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     identity_ids = [ azurerm_user_assigned_identity.aks_user_identity.id ]
   }
 }
+
 
 provider "helm" {
   kubernetes {

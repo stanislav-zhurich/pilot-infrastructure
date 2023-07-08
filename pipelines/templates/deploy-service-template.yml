@@ -29,7 +29,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            commandOptions: '-reconfigure'
+            commandOptions: '-reconfigure -upgrade'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/predeployment' 
             backendServiceArm: '${{ parameters.subscription }}'
             backendAzureRmResourceGroupName: 'infra_rg'
@@ -114,7 +114,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            commandOptions: '-reconfigure'
+            commandOptions: '-reconfigure -upgrade'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/${{ parameters.environment }}/postdeployment' 
             backendServiceArm: '${{ parameters.subscription }}'
             backendAzureRmResourceGroupName: 'infra_rg'

@@ -61,6 +61,7 @@ stages:
                   echo "##vso[task.setvariable variable=servicePrincipalDirectoryVar;isOutput=true]$(terraform output service_sp_tenant_id)"
                   echo "##vso[task.setvariable variable=servicePrincipalIdVar;isOutput=true]$(terraform output service_sp_id)"
                   echo "##vso[task.setvariable variable=servicePrincipalSecretVar;isOutput=true]$(terraform output service_sp_pswd)"
+                  echo "##vso[task.setvariable variable=serviceAksMiVar;isOutput=true]$(terraform output aks_mi_client_id)"
         
   - stage: Deploy
     condition: succeeded()
@@ -68,6 +69,7 @@ stages:
       service_sp_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalIdVar'] ]
       service_sp_pswd: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalSecretVar'] ]
       service_sp_tenant_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.servicePrincipalDirectoryVar'] ]
+      aks_mi_client_id: $[ stageDependencies.Service_Infrastructure_Setup.Terraform.outputs['SetServicePrincipalVariables.serviceAksMiVar'] ]
     displayName: Deploy
     pool: Azure Pipelines
     jobs:
@@ -87,6 +89,7 @@ stages:
               echo $(service_sp_id)
               echo $(service_sp_pswd)
               echo $(service_sp_tenant_id)
+              echo $(aks_mi_client_id)
         - task: HelmDeploy@0
           inputs:
             connectionType: 'Kubernetes Service Connection'
@@ -99,7 +102,7 @@ stages:
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-${{ parameters.environment }}.yaml'
             arguments: '--atomic'
-            overrideValues: 'envValues[1].name=service_sp_id,envValues[1].value=$(service_sp_id),envValues[2].name=service_sp_pswd,envValues[2].value=$(service_sp_pswd),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(service_sp_tenant_id)'
+            overrideValues: 'envValues[4].name=aks_mi_client_id,envValues[4].value=$(aks_mi_client_id),envValues[1].name=service_sp_id,envValues[1].value=$(service_sp_id),envValues[2].name=service_sp_pswd,envValues[2].value=$(service_sp_pswd),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(service_sp_tenant_id)'
 
   - stage: Service_Infrastructure_Postdeployment_Setup
     displayName: Service Infrastructure Postdeployment Setup

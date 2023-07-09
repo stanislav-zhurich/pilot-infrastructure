@@ -31,6 +31,7 @@ module "key_vault" {
   tags = {environment = var.environment}
   current_user_id = data.azuread_client_config.current.object_id
   infra_resource_group_name = var.infra_resource_group_name
+  aks_managed_identity_id = module.kubernetes_cluster.aks_managed_identity.principal_id
 }
 
 module "kubernetes_cluster" {

@@ -27,3 +27,9 @@ resource "azurerm_role_assignment" "terraform_key_vault_contributor_assignement"
   role_definition_name = "Key Vault Administrator"
   principal_id         = var.current_user_id
 }
+
+resource "azurerm_role_assignment" "aks_mi_key_vault_contributor_assignement" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = var.aks_managed_identity_id
+}

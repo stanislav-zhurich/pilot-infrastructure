@@ -1,3 +1,6 @@
+variable "aks_managed_identity_id" {
+  type = string
+}
 variable "key_vault_name" {
   type = string
 }

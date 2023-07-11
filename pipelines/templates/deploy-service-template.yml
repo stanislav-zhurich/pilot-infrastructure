@@ -102,7 +102,7 @@ stages:
             releaseName: '${{ parameters.ServiceName }}'
             valueFile: './${{ parameters.ServiceName }}/values-${{ parameters.environment }}.yaml'
             arguments: '--atomic'
-            overrideValues: 'envValues[4].name=aks_mi_client_id,envValues[4].value=$(aks_mi_client_id),envValues[1].name=service_sp_id,envValues[1].value=$(service_sp_id),envValues[2].name=service_sp_pswd,envValues[2].value=$(service_sp_pswd),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(service_sp_tenant_id)'
+            overrideValues: 'envValues[4].name=AZURE_CLIENT_ID,envValues[4].value=$(aks_mi_client_id),envValues[1].name=service_sp_id,envValues[1].value=$(service_sp_id),envValues[2].name=service_sp_pswd,envValues[2].value=$(service_sp_pswd),envValues[3].name=service_sp_tenant_id,envValues[3].value=$(service_sp_tenant_id)'
 
   - stage: Service_Infrastructure_Postdeployment_Setup
     displayName: Service Infrastructure Postdeployment Setup
